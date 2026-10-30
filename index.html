@@ -3,31 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>panjiarui123 的个人主页</title>
+    <title>panjiarui123 的个人博客</title>
     <style>
+        /* 全局现代感初始化 */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f7f6; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; max-width: 400px; width: 100%; transition: transform 0.3s; }
-        .card:hover { transform: translateY(-5px); }
-        .avatar { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; color: white; font-size: 36px; font-weight: bold; }
-        h1 { font-size: 24px; margin-bottom: 8px; color: #222; }
-        .subtitle { font-size: 14px; color: #888; margin-bottom: 24px; }
-        p { font-size: 15px; color: #555; line-height: 1.6; margin-bottom: 30px; }
-        .links a { display: block; background: #f0f2f5; padding: 12px; margin: 10px 0; border-radius: 8px; color: #333; text-decoration: none; font-weight: 500; transition: all 0.2s; }
-        .links a:hover { background: #667eea; color: white; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; padding-top: 80px; }
+        a { text-decoration: none; color: inherit; }
+
+        /* 1. 顶部高端毛玻璃导航栏 */
+        .navbar { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 1px 3px rgba(0,0,0,0.05); z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; }
+        .nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, #4f46e5, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 24px; list-style: none; font-size: 15px; font-weight: 500; color: #64748b; }
+        .nav-links a:hover { color: #4f46e5; }
+
+        /* 主体双栏布局布局容器 */
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
+
+        /* 2. 左侧：文章与工具列表区域 */
+        .main-content { display: flex; flex-direction: column; gap: 24px; }
+        .section-title { font-size: 18px; color: #64748b; margin-bottom: -8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+        
+        /* 列表卡片基础样式 */
+        .post-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.01); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 8px; border: 1px solid #f1f5f9; }
+        .post-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.02); border-color: #e2e8f0; }
+        
+        /* 特殊高亮工具卡片（给音乐解密用） */
+        .tools-card { border-left: 5px solid #4f46e5; }
+        .tools-tag { align-self: flex-start; background: #e0e7ff; color: #4f46e5; font-size: 12px; padding: 2px 8px; border-radius: 6px; font-weight: 600; }
+        
+        /* 普通文章卡片 */
+        .article-card { border-left: 5px solid #0ea5e9; }
+        .article-tag { align-self: flex-start; background: #e0f2fe; color: #0ea5e9; font-size: 12px; padding: 2px 8px; border-radius: 6px; font-weight: 600; }
+
+        .post-title { font-size: 20px; font-weight: 700; color: #0f172a; transition: color 0.2s; }
+        .post-card:hover .post-title { color: #4f46e5; }
+        .post-desc { font-size: 15px; color: #475569; line-height: 1.5; }
+        .post-meta { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+
+        /* 3. 右侧：侧边栏个人名片（保留并优化你原先的卡片） */
+        .sidebar { display: flex; flex-direction: column; gap: 24px; }
+        .profile-card { background: white; border-radius: 12px; padding: 32px 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); text-align: center; border: 1px solid #f1f5f9; position: sticky; top: 96px; }
+        .avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); margin: 0 auto 16px; display: flex; justify-content: center; align-items: center; color: white; font-size: 32px; font-weight: bold; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2); }
+        .profile-name { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+        .profile-bio { font-size: 14px; color: #64748b; margin-bottom: 20px; }
+        .profile-links a { display: block; background: #f8fafc; padding: 10px; margin: 8px 0; border-radius: 8px; font-size: 14px; color: #475569; font-weight: 500; transition: all 0.2s; border: 1px solid #f1f5f9; }
+        .profile-links a:hover { background: #4f46e5; color: white; border-color: #4f46e5; }
+
+        /* 移动端自适应响应式设计 */
+        @media (max-width: 768px) {
+            .navbar { padding: 0 20px; }
+            .container { grid-template-columns: 1fr; gap: 24px; }
+            .profile-card { position: static; }
+        }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <!-- 头像昵称首字母 -->
-    <div class="avatar">P</div>
-    <h1>panjiarui123</h1>
-    <div class="links">
-        <a href="https://github.com/panjiarui123" target="_blank"> 我的 GitHub 主页</a>
-        <a href="https://panjiarui123.github.io/ncm-mp3/index.html" target="_blank">网易云音频(.ncm)转.mp3音频</a>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-logo">panjiarui123.space</div>
+        <ul class="nav-links">
+            <li><a href="#">首页</a></li>
+            <li><a href="./ncm-mp3/index.html">工具箱</a></li>
+            <li><a href="https://github.com" target="_blank">GitHub</a></li>
+        </ul>
+    </nav>
+
+    <!-- 主体内容 -->
+    <div class="container">
+        
+        <!-- 左侧：内容列表 -->
+        <main class="main-content">
+            <div class="section-title">我的独立工具</div>
+            
+            <!-- 工具卡片（精准链接到你的音乐解密） -->
+            <a href="./ncm-mp3/index.html" class="post-card tools-card">
+                <span class="tools-tag">📦 在线工具</span>
+                <h2 class="post-title">🎵 网易云音频 (.ncm) 离线转 .mp3 工具</h2>
+                <p class="post-desc">全浏览器本地安全解析，支持网易云 ncm、QQ音乐 qmc 等多种加密音频格式的解锁与无损转换，秒级完成，不消耗任何手机/电脑流量。</p>
+                <div class="post-meta">发布时间：2026-10-30 • 状态：运行中</div>
+            </a>
+
+            <div class="section-title">最新文章</div>         
+        </main>
+
+        <!-- 右侧：侧边栏名片 -->
+        <aside class="sidebar">
+            <div class="profile-card">
+                <div class="avatar">P</div>
+                <div class="profile-name">panjiarui123</div>
+                <div class="profile-bio">💻 正在探索前端开发与开源世界。</div>
+                <div class="profile-links">
+                    <a href="https://github.com/panjiarui123" target="_blank">🐙 前往 GitHub 主页</a>
+                    <a href="https://luogu.com.cn/user/1775079">前往 洛谷 主页</a>
+                </div>
+            </div>
+        </aside>
+
     </div>
-</div>
 
 </body>
 </html>
