@@ -8,52 +8,74 @@
         /* 全局现代感初始化 */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; padding-top: 80px; }
-        a { text-decoration: none; color: inherit; }
+        a { text-decoration: none; color: inherit; display: block; }
 
         /* 1. 顶部高端毛玻璃导航栏 */
         .navbar { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 1px 3px rgba(0,0,0,0.05); z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; }
-        .nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, #4f46e5, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-logo { font-size: 20px; font-weight: 700; color: #4f46e5; }
         .nav-links { display: flex; gap: 24px; list-style: none; font-size: 15px; font-weight: 500; color: #64748b; }
-        .nav-links a:hover { color: #4f46e5; }
-
-        /* 主体双栏布局布局容器 */
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
-
-        /* 2. 左侧：文章与工具列表区域 */
-        .main-content { display: flex; flex-direction: column; gap: 24px; }
-        .section-title { font-size: 18px; color: #64748b; margin-bottom: -8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
         
-        /* 列表卡片基础样式 */
-        .post-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.01); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 8px; border: 1px solid #f1f5f9; }
-        .post-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.02); border-color: #e2e8f0; }
-        
-        /* 特殊高亮工具卡片（给音乐解密用） */
-        .tools-card { border-left: 5px solid #4f46e5; }
-        .tools-tag { align-self: flex-start; background: #e0e7ff; color: #4f46e5; font-size: 12px; padding: 2px 8px; border-radius: 6px; font-weight: 600; }
-        
-        /* 普通文章卡片 */
-        .article-card { border-left: 5px solid #0ea5e9; }
-        .article-tag { align-self: flex-start; background: #e0f2fe; color: #0ea5e9; font-size: 12px; padding: 2px 8px; border-radius: 6px; font-weight: 600; }
+        /* 💡 满足需求 1：让工具箱不可点击且鼠标指针变为默认箭头 */
+        .nav-links .no-link { cursor: default; color: #64748b; font-weight: 500; }
 
-        .post-title { font-size: 20px; font-weight: 700; color: #0f172a; transition: color 0.2s; }
-        .post-card:hover .post-title { color: #4f46e5; }
-        .post-desc { font-size: 15px; color: #475569; line-height: 1.5; }
-        .post-meta { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+        /* 主体双栏布局容器 */
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 1fr 2fr; gap: 32px; }
 
-        /* 3. 右侧：侧边栏个人名片（保留并优化你原先的卡片） */
+        /* 2. 左侧：侧边栏个人名片 */
         .sidebar { display: flex; flex-direction: column; gap: 24px; }
         .profile-card { background: white; border-radius: 12px; padding: 32px 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); text-align: center; border: 1px solid #f1f5f9; position: sticky; top: 96px; }
         .avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); margin: 0 auto 16px; display: flex; justify-content: center; align-items: center; color: white; font-size: 32px; font-weight: bold; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2); }
         .profile-name { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
         .profile-bio { font-size: 14px; color: #64748b; margin-bottom: 20px; }
-        .profile-links a { display: block; background: #f8fafc; padding: 10px; margin: 8px 0; border-radius: 8px; font-size: 14px; color: #475569; font-weight: 500; transition: all 0.2s; border: 1px solid #f1f5f9; }
+        .profile-links a { background: #f8fafc; padding: 10px; margin: 8px 0; border-radius: 8px; font-size: 14px; color: #475569; font-weight: 500; transition: all 0.2s; border: 1px solid #f1f5f9; }
         .profile-links a:hover { background: #4f46e5; color: white; border-color: #4f46e5; }
 
-        /* 移动端自适应响应式设计 */
+        /* 3. 右侧：内容列表区域 */
+        .main-content { display: flex; flex-direction: column; gap: 24px; }
+        .section-title { font-size: 18px; color: #64748b; margin-top: 8px; margin-bottom: -8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+        
+        /* 💡 满足需求 2：垂直下滑栏容器配置（工具数量大于1时自动适用） */
+        .tools-scroll-container { 
+            display: flex; 
+            flex-direction: column;
+            gap: 16px; 
+            max-height: 360px; /* 固定下滑区域的最大高度，刚好容纳下大约1.5个卡片 */
+            overflow-y: auto;  /* 激活垂直方向下滑 */
+            padding-right: 8px; /* 给右侧滚动条留出呼吸空间 */
+        }
+        
+        /* 自定义垂直滑栏的滚动条样式，使其精致好看 */
+        .tools-scroll-container::-webkit-scrollbar { width: 6px; }
+        .tools-scroll-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .tools-scroll-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .tools-scroll-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* 列表卡片基础样式 */
+        .post-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #f1f5f9; text-align: left; }
+        .post-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); border-color: #e2e8f0; }
+        
+        /* 标签基础样式 */
+        .card-tag { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 6px; font-weight: 600; margin-bottom: 8px; }
+        
+        /* 卡片个性化边缘色与标签颜色 */
+        .tools-card { border-left: 5px solid #4f46e5; }
+        .tools-tag { background: #e0e7ff; color: #4f46e5; }
+        
+        .calc-card { border-left: 5px solid #7c3aed; }
+        .calc-tag { background: #f3e8ff; color: #7c3aed; }
+        
+        .article-card { border-left: 5px solid #0ea5e9; }
+        .article-tag { background: #e0f2fe; color: #0ea5e9; }
+
+        .post-title { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+        .post-card:hover .post-title { color: #4f46e5; }
+        .post-desc { font-size: 14px; color: #475569; line-height: 1.5; }
+        .post-meta { font-size: 13px; color: #94a3b8; margin-top: 12px; }
+
+        /* 移动端自适应 */
         @media (max-width: 768px) {
             .navbar { padding: 0 20px; }
             .container { grid-template-columns: 1fr; gap: 24px; }
-            .profile-card { position: static; }
         }
     </style>
 </head>
@@ -64,47 +86,58 @@
         <div class="nav-logo">panjiarui123 的个人空间</div>
         <ul class="nav-links">
             <li><a href="#">首页</a></li>
-            <li><a href="./ncm-mp3/index.html">工具箱</a></li>
-            <li><a href="https://github.com/panjiarui123" target="_blank">GitHub</a></li>
+            <!-- 💡 工具箱无链接，单纯作为分类展示文本 -->
+            <li><span class="no-link">工具箱</span></li>
+            <li><a href="https://github.com" target="_blank">GitHub</a></li>
         </ul>
     </nav>
 
     <!-- 主体内容 -->
     <div class="container">
         
-        <!-- 左侧：内容列表 -->
-        <main class="main-content">
-            <div class="section-title">我的独立工具</div>
-            
-            <!-- 工具卡片（精准链接到你的音乐解密） -->
-            <a href="./ncm-mp3/index.html" class="post-card tools-card">
-                <span class="tools-tag">📦 在线工具</span>
-                <h2 class="post-title">🎵 网易云音频 (.ncm) 离线转 .mp3 工具</h2>
-                <p class="post-desc">全浏览器本地安全解析，支持网易云 ncm 加密音频格式的解锁与无损转换，秒级完成，不消耗任何手机/电脑流量。</p>
-                <div class="post-meta">发布时间：2026-10-30 • 状态：运行中</div>
-            </a>
-            <a href="https://github.com/panjiarui/calcv/releases/latest" class="post-card tools-card">
-                <span class="tools-tag"> 计算器 </span>
-                <h2 class="post-title"> 计算器 </h2>
-                <p class="post-desc">支持高精度计算，代码已开源</p>
-                <div class="post-meta">发布时间：2026-10-30 • 状态：运行中</div>
-            </a>
-
-            <div class="section-title">最新文章</div>         
-        </main>
-
-        <!-- 右侧：侧边栏名片 -->
+        <!-- 左侧：侧边栏名片 -->
         <aside class="sidebar">
             <div class="profile-card">
                 <div class="avatar">P</div>
                 <div class="profile-name">panjiarui123</div>
                 <div class="profile-bio">💻 正在探索前端开发与开源世界。</div>
                 <div class="profile-links">
-                    <a href="https://github.com/panjiarui123" target="_blank">🐙 前往 GitHub 主页</a>
-                    <a href="https://www.luogu.com.cn/user/1775079">前往 洛谷 主页</a>
+                    <a href="https://github.com" target="_blank">🐙 前往 GitHub 主页</a>
+                    <a href="https://luogu.com.cn" target="_blank">🐢 前往 洛谷 主页</a>
                 </div>
             </div>
         </aside>
+
+        <!-- 右侧：内容列表 -->
+        <main class="main-content">
+            <div class="section-title">我的独立工具</div>
+            
+            <!-- 💡 垂直下滑容器：当前有 2 个工具（数量大于 1），会自动限制高度并激活垂直滑动条 -->
+            <div class="tools-scroll-container">
+                
+                <!-- 工具 1：音乐解密 -->
+                <a href="./ncm-mp3/index.html" class="post-card tools-card">
+                    <span class="card-tag tools-tag">⚙️ 在线工具</span>
+                    <h2 class="post-title">🎵 网易云音频离线转换</h2>
+                    <p class="post-desc">全浏览器本地安全解析，支持网易云 ncm 加密音频格式的解锁与无损转换。</p>
+                    <div class="post-meta">状态：运行中</div>
+                </a>
+
+                <!-- 工具 2：高精度计算器 -->
+                <a href="./calcv/index.html" class="post-card calc-card">
+                    <span class="card-tag calc-tag">🔢 计算器</span>
+                    <h2 class="post-title">🧮 高精度超级计算器</h2>
+                    <p class="post-desc">支持超长数字的高精度算术运算与科学计算，解决大数溢出问题，源码已开源。</p>
+                    <div class="post-meta">状态：运行中</div>
+                </a>
+
+            </div>
+
+            <div class="section-title">最新文章</div>
+
+
+            
+        </main>
 
     </div>
 
