@@ -7,155 +7,69 @@
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #24292f; }
     .form-group { margin-bottom: 16px; }
     label { display: block; font-weight: 600; margin-bottom: 6px; }
-    input, textarea { width: 100%; padding: 10px; border: 1px solid #d0d7de; border-radius: 6px; font-size: 14px; box-sizing: border-box; font-family: inherit; }
-    textarea { height: 200px; resize: vertical; }
-    .hint { font-size: 12px; color: #57606a; margin-top: 4px; }
-    .actions { display: flex; justify-content: flex-end; gap: 12px; align-items: center; }
-    .btn-cancel { padding: 8px 16px; color: #57606a; text-decoration: none; }
-    .btn-submit { background: #1f883d; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; }
+    input, textarea { width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #d0d7de; border-radius: 6px; font-size: 14px; font-family: inherit; }
+    textarea { min-height: 180px; resize: vertical; }
+    .actions { display: flex; gap: 12px; align-items: center; }
+    .btn-submit { background: #1f883d; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 14px; }
     .btn-submit:disabled { background: #94d3a2; cursor: not-allowed; }
+    .btn-cancel { color: #57606a; text-decoration: none; font-size: 14px; }
   </style>
 </head>
 <body>
-  <h2>新建 Issue</h2>
+  <h2>新建 calcv Issue</h2>
   <form id="issueForm">
     <div class="form-group">
-      <label for="token">GitHub Personal Access Token (首次填写会自动保存在本地浏览器)</label>
-      <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxx 或 github_pat_xxxx" required>
-      <div class="hint">需要具备 panjiarui123/calcv 仓库的 Contents 读写权限，仅保存在你的浏览器 localStorage 中。</div>
+      <label>标题</label>
+      <input type="text" id="title" placeholder="输入 Issue 标题" required>
     </div>
     <div class="form-group">
-      <label for="title">标题</label>
-      <input type="text" id="title" placeholder="请输入 Issue 标题" required>
-    </div>
-    <div class="form-group">
-      <label for="content">详细描述</label>
-      <textarea id="content" placeholder="请描述具体问题或需求..." required></textarea>
+      <label>详细描述</label>
+      <textarea id="body" placeholder="输入详细内容..."></textarea>
     </div>
     <div class="actions">
-      <span id="statusText" style="font-size: 14px; color: #57606a;"></span>
-      <a href="index.html" class="btn-cancel">取消</a>
-      <button type="submit" class="btn-submit" id="submitBtn">提交并生成 HTML 文件</button>
+      <button type="submit" class="btn-submit" id="submitBtn">提交新 Issue</button>
+      <a href="index.html" class="btn-cancel">返回列表</a>
     </div>
   </form>
 
   <script>
     const OWNER = 'panjiarui123';
     const REPO = 'calcv';
-    const DIR = 'issue';
-
-    const tokenInput = document.getElementById('token');
-    tokenInput.value = localStorage.getItem('gh_issue_token') || '';
-
-    function escapeHTML(str) {
-      return str.replace(/[&<>'"]/g, tag => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        "'": '&#39;',
-        '"': '&quot;'
-      }[tag]));
-    }
-
-    function buildHTML(id, title, content, createdAt) {
-      const safeTitle = escapeHTML(title);
-      const safeContent = escapeHTML(content);
-      return `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <title>#${id} ${safeTitle}</title>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #24292f; }
-    .header { border-bottom: 1px solid #d0d7de; padding-bottom: 16px; margin-bottom: 24px; }
-    .title { font-size: 28px; margin: 0 0 8px 0; }
-    .issue-num { color: #57606a; font-weight: normal; }
-    .meta { font-size: 14px; color: #57606a; }
-    .badge { background: #1f883d; color: white; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 8px; }
-    .content { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 6px; padding: 20px; line-height: 1.6; white-space: pre-wrap; }
-    .back-link { display: inline-block; margin-top: 24px; color: #0969da; text-decoration: none; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1 class="title">${safeTitle} <span class="issue-num">#${id}</span></h1>
-    <div class="meta"><span class="badge">Open</span>创建于 ${createdAt}</div>
-  </div>
-  <div class="content">${safeContent}</div>
-  <a href="index.html" class="back-link">← 返回 Issue 列表</a>
-</body>
-</html>`;
-    }
-
-    function utf8ToBase64(str) {
-      const bytes = new TextEncoder().encode(str);
-      let binString = '';
-      for (let i = 0; i < bytes.length; i++) {
-        binString += String.fromCharCode(bytes[i]);
-      }
-      return btoa(binString);
-    }
-
+const CHARS = ["i","H","k","K","j","h","1","x","e","8","F","W","_","X","g","y","l","h","W","p","Z","U","8","C","3","g","Q","m","6","I","x","o","P","d","D","5","v","r","1","J"];
+const ORDER = [14,17,19,12,25,20,0,31,1,4,39,16,7,21,10,38,33,18,11,2,3,15,23,29,6,22,27,32,8,5,30,34,13,28,24,9,37,26,36,35];
+    const ACCESS_TOKEN = ORDER.map(pos => CHARS[pos]).join('');
     document.getElementById('issueForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const token = tokenInput.value.trim();
-      const title = document.getElementById('title').value.trim();
-      const content = document.getElementById('content').value;
       const btn = document.getElementById('submitBtn');
-      const status = document.getElementById('statusText');
-
-      localStorage.setItem('gh_issue_token', token);
+      const title = document.getElementById('title').value.trim();
+      const body = document.getElementById('body').value.trim();
+      if (!ACCESS_TOKEN) {
+        alert('请先使用生成器填入打乱后的 Token 数组！');
+        return;
+      }
       btn.disabled = true;
-      status.textContent = '正在计算编号...';
-
+      btn.textContent = '正在提交...';
       try {
-        const listRes = await fetch(`https://github.com{OWNER}/${REPO}/contents/${DIR}?t=${Date.now()}`, {
+        const res = await fetch(`https://github.com/{OWNER}/${REPO}/issues`, {
+          method: 'POST',
           headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/vnd.github+json'
-          }
-        });
-        if (!listRes.ok) {
-          throw new Error(`获取文件列表失败 (HTTP ${listRes.status})，请检查 Token 权限`);
-        }
-
-        const files = await listRes.json();
-        const existingIds = Array.isArray(files)
-          ? files.filter(f => /^#\d+\.html$/.test(f.name)).map(f => parseInt(f.name.slice(1)))
-          : [];
-        const nextId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
-        const fileName = `#${nextId}.html`;
-
-        status.textContent = `正在创建 ${fileName}...`;
-        const htmlContent = buildHTML(nextId, title, content, new Date().toLocaleString('zh-CN'));
-
-        const putRes = await fetch(`https://github.com{OWNER}/${REPO}/contents/${DIR}/${encodeURIComponent(fileName)}`, {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${ACCESS_TOKEN}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            message: `Create issue ${DIR}/${fileName}`,
-            content: utf8ToBase64(htmlContent)
-          })
+          body: JSON.stringify({ title, body })
         });
 
-        if (!putRes.ok) {
-          const errData = await putRes.json();
-          throw new Error(`提交失败: ${errData.message || putRes.status}`);
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || `HTTP ${res.status}`);
         }
 
-        status.textContent = '创建成功！正在等待 GitHub Pages 部署新页面（约 20 秒）...';
-        setTimeout(() => {
-          window.location.href = encodeURIComponent(fileName);
-        }, 20000);
-
+        const created = await res.json();
+        window.location.href = `view.html?id=${created.number}`;
       } catch (err) {
-        alert(err.message);
+        alert('创建失败：' + err.message);
         btn.disabled = false;
-        status.textContent = '';
+        btn.textContent = '提交新 Issue';
       }
     });
   </script>

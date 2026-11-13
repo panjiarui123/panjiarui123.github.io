@@ -14,69 +14,52 @@
     .issue-item:hover { background: #f6f8fa; }
     .issue-link { font-size: 16px; font-weight: 600; color: #24292f; text-decoration: none; }
     .issue-link:hover { color: #0969da; }
-    .issue-meta { color: #57606a; font-size: 13px; }
+    .issue-meta { color: #57606a; font-size: 13px; margin-top: 4px; }
+    .badge-open { background: #1f883d; color: white; font-size: 12px; padding: 2px 8px; border-radius: 12px; }
     .empty { padding: 40px; text-align: center; color: #57606a; }
   </style>
 </head>
 <body>
   <div class="top-bar">
-    <h2>Issues</h2>
+    <h2>calcv Issues</h2>
     <a href="new.html" class="btn-new">New Issue</a>
   </div>
   <ul class="issue-list" id="issueList">
-    <li class="empty">正在从 GitHub 仓库加载列表...</li>
+    <li class="empty">正在从 GitHub 加载 calcv 的 Issues...</li>
   </ul>
 
   <script>
     const OWNER = 'panjiarui123';
     const REPO = 'calcv';
-    const DIR = 'issue';
 
     async function loadIssues() {
       const listEl = document.getElementById('issueList');
       try {
-        const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${DIR}?t=${Date.now()}`);
+        // 调用 GitHub 原生 Issues API
+        const res = await fetch(`https://github.com/{OWNER}/${REPO}/issues?state=open&t=${Date.now()}`);
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}`);
         }
-        const files = await res.json();
+        const data = await res.json();
+        // 过滤掉 Pull Request，只保留纯 Issue
+        const issues = data.filter(item => !item.pull_request);
 
-        const issueFiles = files
-          .filter(f => /^#\d+\.html$/.test(f.name))
-          .sort((a, b) => parseInt(b.name.slice(1), 10) - parseInt(a.name.slice(1), 10));
-
-        if (issueFiles.length === 0) {
-          listEl.innerHTML = '<li class="empty">暂无 Issue，点击右上角创建一个吧！</li>';
+        if (issues.length === 0) {
+          listEl.innerHTML = '<li class="empty">暂无 Open 状态的 Issue，点击右上角创建一个吧！</li>';
           return;
         }
 
-        const itemsHtml = await Promise.all(issueFiles.map(async (file) => {
-          const encodedHref = encodeURIComponent(file.name);
-          let displayTitle = file.name;
-
-          try {
-            // 直接从 download_url 拉取最新文件内容，不受 GitHub Pages 缓存延迟影响
-            const pageRes = await fetch(`${file.download_url}?t=${Date.now()}`);
-            const htmlText = await pageRes.text();
-            const titleMatch = htmlText.match(/<title>(.*?)<\/title>/i);
-            if (titleMatch && titleMatch[1]) {
-              displayTitle = titleMatch[1];
-            }
-          } catch (e) {
-            console.warn('获取标题失败:', file.name, e);
-          }
-
-          return `
-            <li class="issue-item">
-              <a class="issue-link" href="${encodedHref}">${displayTitle}</a>
-              <span class="issue-meta">${file.name}</span>
-            </li>
-          `;
-        }));
-
-        listEl.innerHTML = itemsHtml.join('');
+        listEl.innerHTML = issues.map(issue => `
+          <li class="issue-item">
+            <div>
+              <a class="issue-link" href="view.html?id=${issue.number}">${issue.title}</a>
+              <div class="issue-meta">#${issue.number} 由 ${issue.user.login} 创建于 ${new Date(issue.created_at).toLocaleDateString('zh-CN')}</div>
+            </div>
+            <span class="badge-open">${issue.state}</span>
+          </li>
+        `).join('');
       } catch (err) {
-        listEl.innerHTML = `<li class="empty">加载失败 (${err.message})，请确保仓库为 Public 且存在 ${DIR} 文件夹。</li>`;
+        listEl.innerHTML = `<li class="empty">加载失败 (${err.message})，请检查网络或确认 calcv 仓库为 Public。</li>`;
       }
     }
 

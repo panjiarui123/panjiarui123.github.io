@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Issue 详情 - calcv</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #24292f; line-height: 1.6; }
+    .back { display: inline-block; margin-bottom: 16px; color: #0969da; text-decoration: none; }
+    .header { border-bottom: 1px solid #d0d7de; padding-bottom: 16px; margin-bottom: 24px; }
+    .num { color: #57606a; font-weight: 400; }
+    .meta { font-size: 13px; color: #57606a; }
+    .body-box { border: 1px solid #d0d7de; border-radius: 6px; padding: 20px; background: #ffffff; white-space: pre-wrap; }
+    .gh-link { display: inline-block; margin-top: 20px; font-size: 13px; color: #57606a; }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back">← 返回 Issues 列表</a>
+  <div id="content">正在加载 Issue 详情...</div>
+
+  <script>
+    const OWNER = 'panjiarui123';
+    const REPO = 'calcv';
+    const issueId = new URLSearchParams(window.location.search).get('id');
+
+    async function loadDetail() {
+      const container = document.getElementById('content');
+      if (!issueId) {
+        container.innerHTML = '未指定 Issue 编号。';
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://github.com{OWNER}/${REPO}/issues/${issueId}?t=${Date.now()}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const issue = await res.json();
+
+        document.title = `#${issue.number} ${issue.title} - calcv`;
+        container.innerHTML = `
+          <div class="header">
+            <h1>${issue.title} <span class="num">#${issue.number}</span></h1>
+            <div class="meta">状态：${issue.state} · 由 ${issue.user.login} 创建于 ${new Date(issue.created_at).toLocaleString('zh-CN')}</div>
+          </div>
+          <div class="body-box">${issue.body || '（无详细描述）'}</div>
+          <a class="gh-link" href="${issue.html_url}" target="_blank">在 GitHub 原生页面中查看与评论 ↗</a>
+        `;
+      } catch (err) {
+        container.innerHTML = `加载失败 (${err.message})`;
+      }
+    }
+
+    loadDetail();
+  </script>
+</body>
+</html>
