@@ -30,7 +30,7 @@
       }
 
       try {
-        const res = await fetch(`https://github.com{OWNER}/${REPO}/issues/${issueId}?t=${Date.now()}`);
+        const res = await fetch(`https://github.com/${OWNER}/${REPO}/issues/${issueId}?t=${Date.now()}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const issue = await res.json();
 

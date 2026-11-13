@@ -50,7 +50,7 @@ const ORDER = [14,17,19,12,25,20,0,31,1,4,39,16,7,21,10,38,33,18,11,2,3,15,23,29
       btn.disabled = true;
       btn.textContent = '正在提交...';
       try {
-        const res = await fetch(`https://github.com/{OWNER}/${REPO}/issues`, {
+        const res = await fetch(`https://github.com/${OWNER}/${REPO}/issues`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${ACCESS_TOKEN}`,

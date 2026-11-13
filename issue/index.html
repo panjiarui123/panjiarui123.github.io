@@ -36,7 +36,7 @@
       const listEl = document.getElementById('issueList');
       try {
         // 调用 GitHub 原生 Issues API
-        const res = await fetch(`https://github.com/{OWNER}/${REPO}/issues?state=open&t=${Date.now()}`);
+        const res = await fetch(`https://github.com/${OWNER}/${REPO}/issues?state=open&t=${Date.now()}`);
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}`);
         }
